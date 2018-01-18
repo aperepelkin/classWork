@@ -2,7 +2,7 @@ package lesson18;
 
 public class Circle {
 	
-	private int radius;
+	private final int radius;
 	private double squire;
 	
 	public Circle(int radius) {
