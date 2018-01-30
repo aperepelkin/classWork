@@ -35,6 +35,11 @@ public abstract class Drawing extends Application {
                 public void drawline(Point from, Point to) {
                     main.getGc().strokeLine(from.x, from.y, to.x, to.y);
                 }
+
+                @Override
+                public void clear() {
+                    main.getGc().clearRect(0, 0, main.getCanvas().getWidth(), main.getCanvas().getHeight());
+                }
             };
 
             new Thread(() -> {

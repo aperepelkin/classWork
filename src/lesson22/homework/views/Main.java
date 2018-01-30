@@ -14,6 +14,7 @@ public class Main {
     public AnchorPane rightPane;
 
     private GraphicsContext gc;
+    private Canvas canvas;
 
     @FXML
     public void initialize() {
@@ -29,7 +30,7 @@ public class Main {
 
         leftPane.getChildren().addAll(consoleView);
 
-        CustomCanvas canvas = new CustomCanvas();
+        canvas = new CustomCanvas();
         gc = canvas.getGraphicsContext2D();
 
         AnchorPane.setBottomAnchor(canvas, 0D);
@@ -42,5 +43,9 @@ public class Main {
 
     public GraphicsContext getGc() {
         return gc;
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
     }
 }

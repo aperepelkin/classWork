@@ -8,4 +8,7 @@ import lesson20.Point;
 public interface Painter {
 	// служит для отрисовки линий
 	void drawline(Point from, Point to);
+	default void clear() {
+		System.out.println("Do nothing");
+	}
 }
