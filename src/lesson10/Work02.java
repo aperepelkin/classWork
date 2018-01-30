@@ -21,7 +21,7 @@ public class Work02 {
 					isDigit = false;
 					break;
 				}
-				digits.replace(target, replacement)
+//				digits.replace(target, replacement)
 			}
 			
 			if (!isDigit)

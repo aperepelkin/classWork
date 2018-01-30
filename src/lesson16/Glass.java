@@ -1,5 +1,7 @@
 package lesson16;
 
+import ru.itstep.lesson17.TestClass;
+
 public class Glass {
 	
 	TestClass c;
