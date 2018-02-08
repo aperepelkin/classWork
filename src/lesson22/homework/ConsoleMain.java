@@ -12,6 +12,7 @@ public class ConsoleMain {
 			figure.draw(painter);
 		} catch (InvalidFigureException e) {
 			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	

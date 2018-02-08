@@ -8,6 +8,7 @@ public class InvalidFigureException extends Exception {
 	public InvalidFigureException(
 			Integer oneSideLength, 
 			Integer twoSideLength) {
+		super("any2");
 		this.oneSideLength = oneSideLength;
 		this.twoSideLength = twoSideLength;
 	}
