@@ -6,10 +6,22 @@ public class Square implements Figure {
 	
 	private Point bottomLeft;
 	private Point bottomRight;
+	private Point topRight;
+	private Point topLeft;
 
-	public Square(Point bottomLeft, Point topRigth) {
+	public Square(Point bottomLeft, Point topRight) 
+			throws InvalidFigureException {
         // TODO определить создание квадрата по двум точкам,
-        // TODO при этом если точки заданы не корректно сообщение об этом на экран.
+        // TODO при этом если точки заданы не корректно сообщение об этом на экран
+    	if(topRight.x - bottomLeft.x != topRight.y - bottomLeft.y) {
+    		throw new InvalidFigureException(
+    				topRight.x - bottomLeft.x,
+    				topRight.y - bottomLeft.y);
+    	}
+    	this.bottomLeft = bottomLeft;
+    	this.topRight = topRight;
+    	this.bottomRight = new Point(topRight.x, bottomLeft.y);
+    	this.topLeft = new Point(bottomLeft.x, topRight.y);
     }
 
     public Square(Point bottomLeft, Integer sideLength) {
