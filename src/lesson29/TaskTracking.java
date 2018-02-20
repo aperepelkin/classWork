@@ -4,50 +4,65 @@ import java.util.Scanner;
 
 public class TaskTracking {
 
+	private Progress status = Progress.ToDo;
+
 	public enum Progress {
 		ToDo("Ожидание"), InProgress("В процессе..."), Done("Выполнена");
-		
-		public String Output ;
-		
-		private Progress (String Output) {
+
+		public final String Output;
+
+		private Progress(String Output) {
 			this.Output = Output;
 		}
 	}
-	
-	
-	public static void main(String[] args) {
-		boolean exit = false;
-		Progress var = Progress.ToDo;
-		do {
-		System.out.println("Введите команду (Status / Create / Start / Finish)");
-		Scanner sc = new Scanner(System.in);
-		String s = sc.nextLine();
+
+	public enum Commands {
 		
-		switch (s) {
-		case "Status":
-			System.err.println(var.Output);
-			break;
-		case "Create":
-			var = Progress.ToDo;
-			System.err.println(var.Output);
-			break;
-		case "Start":
-			var = Progress.InProgress;
-			System.err.println(var.Output);
-			break;
-		case "Finish":
-			if (var != Progress.ToDo) {
-			var = Progress.Done;
-			System.err.println(var.Output);
-			exit = true;
+		Status {
+			@Override
+			public void execute(TaskTracking task) {
+				System.out.println(task.status.Output);
 			}
-			if (var == Progress.ToDo) {
-				System.err.println("Ошибка");
+		},
+		Create {
+			@Override
+			public void execute(TaskTracking task) {
+				task.status = Progress.ToDo;
 			}
-			break;
+		},
+		Start {
+			@Override
+			public void execute(TaskTracking task) {
+				task.status = Progress.InProgress;
+
+			}
+		},
+		Finish {
+			@Override
+			public void execute(TaskTracking task) throws UnsupportedStatusException {
+				if (task.status == Progress.InProgress)
+					task.status = Progress.Done;
+				else
+					throw new UnsupportedStatusException();
+			}
+		};
+
+		public void execute(TaskTracking task) throws UnsupportedStatusException {
+			throw new UnsupportedStatusException();
 		}
-		
-		}while (!exit);
+	}
+
+	public static void main(String[] args) throws UnsupportedStatusException {
+		boolean exit = false;
+		TaskTracking task = new TaskTracking();
+		do {
+			System.out.println("Введите команду (Status / Create / Start / Finish)");
+			Scanner sc = new Scanner(System.in);
+			String s = sc.nextLine();
+			Commands command = Commands.valueOf(s);
+			command.execute(task);
+			
+		} while (!exit);
 	}
 
 }

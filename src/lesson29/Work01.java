@@ -3,13 +3,17 @@ package lesson29;
 public class Work01 {
 	
 	public enum Seasons {
-		WINTER("Зима"), SUMMER("Лето"), SPRING("Весна"), AUTUMN("Осень");
+		WINTER, SUMMER("Лето"), SPRING("Весна"), AUTUMN("Осень");
 		
 		public String russianName;
 		
         Seasons(String russianName) {
 			this.russianName = russianName;
 		}
+        
+        Seasons() {
+        	russianName = "NoName";
+        }
 		
 		public boolean isCold() {
 			return this != SUMMER;
