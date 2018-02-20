@@ -27,4 +27,9 @@ public class Point {
 	public int hashCode() {
 		return Integer.hashCode(x) + Integer.hashCode(y) + 10;
 	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		System.out.println("Remove me " + toString());
+	}
 }
