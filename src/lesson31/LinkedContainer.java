@@ -1,16 +1,20 @@
 package lesson31;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
-public class LinkedContainer<E> implements Iterable<E> {
+public class LinkedContainer<E> implements Iterable<E>, List<E> {
 
 	private Node<E> fstNode;
 	private Node<E> lstNode;
 	private int size = 0;
 	
 	public LinkedContainer() {
-		lstNode = new Node<E>(null, fstNode, null);
+		lstNode = new Node<E>(null, fstNode/*==null*/, null);
 		fstNode = new Node<E>(null, null, lstNode);
+		lstNode.prevElement = fstNode;
 	}
 	
 	public void addLast(E e) {
@@ -34,71 +38,69 @@ public class LinkedContainer<E> implements Iterable<E> {
 	}
 	
 	public E getElementByIndex(int counter) {
+		return getNodeByIndex(counter).currentElement;
+	}
+
+	private Node<E> getNodeByIndex(int counter) {
 		Node<E> target = fstNode.getNextElement();
 		for (int i = 0; i < counter; i++) {
-			target = getNextElement(target); // method private Node<E> getNextElement(Node<E> current)
+			target = target.getNextElement(); // method private Node<E> getNextElement(Node<E> current)
 		}
-		return target.getCurrentElement();
+		return target;
 	}
-	
-	private Node<E> getNextElement(Node<E> current) {
-		return current.getNextElement();
-	}
-	
-	public Node<E> deleteAtPosition(int position) {
+
+	public E deleteAtPosition(int position) {
 		if(position > size || position < 1) {
-			System.out.println("Invalid position.");
-			return fstNode;
+			throw new IndexOutOfBoundsException();
 		}
 		if(position == 1) {
-			Node<E> temp = fstNode;
-			fstNode.setNextElement(fstNode);
-			temp.nextElement = null;
-			return temp;
+			size--;
+			Node<E> temp = fstNode.getNextElement();
+			fstNode.setNextElement(lstNode);
+			lstNode.setPrevElement(fstNode);
+			return temp.getCurrentElement();
 		}
 		else {
-			Node<E> previous = fstNode;
-			int count = 1;
-			while(count < position) {
-				previous = previous.nextElement;
-				count++;
-			}
+			size--;
+			Node<E> previous = getNodeByIndex(position);
 			Node<E> current = previous.nextElement;
 			previous.nextElement = current.nextElement;
-			current.nextElement = null;
-			return current;
+			current.nextElement.prevElement = previous;
+			return current.currentElement;
 		}
 	}
 	
 	// iterator for getting el-s from the list
 	public Iterator<E> iterator() {
 		return new Iterator<E>() { // anonymous class
-			int counter = 0;
+			private Node<E> current = fstNode; 
 			
 			@Override
 			public boolean hasNext() {
-				return counter < size;
+				return current.nextElement != lstNode;
 			}
 			
 			@Override
 			public E next() {
-				return getElementByIndex(counter++);
+				current = current.nextElement;
+				return current.currentElement;
 			}
 		};
 	}
 	// method to converse el-s from the list
 	public Iterator<E> descendingIterator() {
 		return new Iterator<E>() { // anonymous class
-			int counter = size - 1;
+			private Node<E> current = lstNode; 
 
 			@Override
 			public boolean hasNext() {
-				return counter >= 0;
+				return lstNode.prevElement != fstNode;
 			}
 
 			@Override
 			public E next() {
-				return getElementByIndex(counter--);
+				current = current.prevElement;
+				return current.currentElement;
 			}
 		};
 	}
@@ -138,5 +140,126 @@ public class LinkedContainer<E> implements Iterable<E> {
 		public void setPrevElement(Node<E> prevElement) {
 			this.prevElement = prevElement;
 		}
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return size() == 0;
+	}
+
+	@Override
+	public boolean contains(Object o) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Object[] toArray() {
+		return null;
+	}
+
+	@Override
+	public <T> T[] toArray(T[] a) {
+		return null;
+	}
+
+	@Override
+	public boolean add(E e) {
+		addLast(e);
+		return true;
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		return false;
+	}
+
+	@Override
+	public boolean containsAll(Collection<?> c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addAll(Collection<? extends E> c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addAll(int index, Collection<? extends E> c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean removeAll(Collection<?> c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void clear() {
+		fstNode.setNextElement(lstNode);
+		lstNode.setPrevElement(fstNode);
+	}
+
+	@Override
+	public E get(int index) {
+		return getElementByIndex(index);
+	}
+
+	@Override
+	public E set(int index, E element) {
+		getNodeByIndex(index).currentElement = element;
+		return null;
+	}
+
+	@Override
+	public void add(int index, E element) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public E remove(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int indexOf(Object o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int lastIndexOf(Object o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public ListIterator<E> listIterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ListIterator<E> listIterator(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<E> subList(int fromIndex, int toIndex) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
