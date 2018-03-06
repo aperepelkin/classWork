@@ -64,10 +64,15 @@ public class LinkedContainer<E> implements Iterable<E>, List<E> {
 			size--;
 			Node<E> previous = getNodeByIndex(position);
 			Node<E> current = previous.nextElement;
-			previous.nextElement = current.nextElement;
-			current.nextElement.prevElement = previous;
+			remove(current);
 			return current.currentElement;
 		}
+	}
+	
+	private void remove(Node<E> current) {
+		Node<E> previous = current.prevElement;
+		previous.nextElement = current.nextElement;
+		current.nextElement.prevElement = previous;
 	}
 	
 	// iterator for getting el-s from the list
@@ -171,6 +176,15 @@ public class LinkedContainer<E> implements Iterable<E>, List<E> {
 
 	@Override
 	public boolean remove(Object o) {
+		Node<E> current = fstNode.nextElement;
+		while(current != lstNode) {
+			if(current.currentElement == null && o == null 
+					|| current.currentElement.equals(o)) {
+				remove(current);
+				return true;
+			} 
+			current = current.nextElement;
+		}
 		return false;
 	}
 
@@ -229,8 +243,7 @@ public class LinkedContainer<E> implements Iterable<E>, List<E> {
 
 	@Override
 	public E remove(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		return deleteAtPosition(index);
 	}
 
 	@Override
