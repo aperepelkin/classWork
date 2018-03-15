@@ -260,8 +260,59 @@ public class LinkedContainer<E> implements Iterable<E>, List<E> {
 
 	@Override
 	public ListIterator<E> listIterator() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ListIterator<E>() { // anonymous class
+			private Node<E> current = fstNode; 
+			private int index = -1;
+			
+			@Override
+			public boolean hasNext() {
+				return current.nextElement != lstNode;
+			}
+			
+			@Override
+			public E next() {
+				index++;
+				current = current.nextElement;
+				return current.currentElement;
+			}
+
+			@Override
+			public boolean hasPrevious() {
+				return current.prevElement != fstNode;
+			}
+
+			@Override
+			public E previous() {
+				index--;
+				current = current.prevElement;
+				return current.currentElement;
+			}
+
+			@Override
+			public int nextIndex() {
+				return index + 1;
+			}
+
+			@Override
+			public int previousIndex() {
+				return index - 1;
+			}
+
+			@Override
+			public void remove() {
+				LinkedContainer.this.remove(current);
+			}
+
+			@Override
+			public void set(E e) {
+				current.currentElement = e;
+			}
+
+			@Override
+			public void add(E e) {
+				LinkedContainer.this.add(index + 1, e);
+			}
+		};	
 	}
 
 	@Override
