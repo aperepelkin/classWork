@@ -51,6 +51,10 @@ public class TaskTracking {
 			throw new UnsupportedStatusException();
 		}
 	}
+	
+	public Progress getStatus() {
+		return status;
+	}
 
 	public static void main(String[] args) throws UnsupportedStatusException {
 		boolean exit = false;
