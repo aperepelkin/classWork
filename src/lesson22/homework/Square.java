@@ -31,12 +31,12 @@ public class Square implements Figure {
 
     public Point getTopLeft() {
         // TODO возврат координаты верхнего левого угла
-        return null;
+        return topLeft;
     }
 
     public Point getTopRigth() {
         // TODO возврат координаты верхнего правого угла
-        return null;
+        return topRight;
     }
 
     public Point getBottomLeft() {
@@ -68,6 +68,9 @@ public class Square implements Figure {
     
 	@Override
 	public void draw(Painter painter) {
+		painter.drawline(getBottomLeft(), getTopLeft());
+		painter.drawline(getTopLeft(), getTopRigth());
+		painter.drawline(getTopRigth(), getBottomRight());
 		painter.drawline(getBottomRight(), getBottomLeft());
 	}
 }

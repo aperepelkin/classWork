@@ -1,3 +1,4 @@
 bin
 *.log
 test.txt
+/.apt_generated/
