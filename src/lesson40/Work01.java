@@ -46,7 +46,7 @@ public class Work01 {
 			System.out.println("Reset counter! Quick, press enter");
 			System.in.read();
 			thread1.counter = 100;
-			thread2.interrupt();
+			thread2.();
 		}
 	}
 }
