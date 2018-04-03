@@ -1,12 +1,8 @@
 package lesson40;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.Reader;
-import java.io.StringBufferInputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,7 +72,7 @@ public class Finder {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Путь к файлу");
@@ -87,20 +83,28 @@ public class Finder {
 		
 		FileInputStream fin = new FileInputStream(fileName);
 		
+		final int THREADS = 5;
 		String line = null;
 		int size = fin.available();
-		int threadSize = size / 4;
+		int threadSize = size / THREADS;
 		
 		List<SearchWorker2> workers = new ArrayList<>();
-		for(int i = 0; i < 4; i++) {
+		List<Thread> threads = new ArrayList<>();
+		for(int i = 0; i < THREADS; i++) {
 			byte[] text = new byte[threadSize];
 			fin.read(text);
 			SearchWorker2 worker = new SearchWorker2(text, word);
 			workers.add(worker);
-			new Thread(worker).start();
+			worker.run();
+			Thread thread = new Thread(worker);
+			thread.start();
+			threads.add(thread);
 		}
-		
+		for(Thread thread : threads)
+			thread.join();
 		System.out.println("Duration: " + (System.nanoTime() - startTime));
+		for(SearchWorker2 worker : workers) 
+			System.out.println(worker.enters);
 	}
 	
 	private static List<Integer> find(String line, String word) {
