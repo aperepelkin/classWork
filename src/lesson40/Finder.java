@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +15,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Finder {
-	class SearchWorker implements Runnable {
+	
+	static class SearchWorker implements Runnable {
 
 		List<Integer> positions = new ArrayList<>();
 		
@@ -35,6 +38,42 @@ public class Finder {
 					positions.add(i);
 			}
 		}
+		
+		public boolean matched() {
+			return !positions.isEmpty();
+		}
+	}
+	
+	static class SearchWorker2 implements Runnable {
+		
+		private byte[] buffer;
+		private String word;
+		Map<Integer, List<Integer>> enters = new HashMap<>();
+		
+		public SearchWorker2(byte[] buffer, String word) {
+			this.buffer = buffer; 
+			this.word = word;
+		}
+		
+		@Override
+		public void run() {
+			StringReader sr = 
+					new StringReader(new String(buffer));
+			LineNumberReader reader = new LineNumberReader(sr);
+
+			String line = null;
+			
+			try {
+				while((line = reader.readLine()) != null) {
+					int number = reader.getLineNumber();
+					List<Integer> finds = find(line, word);
+					if(finds.size() != 0)
+						enters.put(number, finds);
+				}
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -45,17 +84,20 @@ public class Finder {
 		System.out.println("Слово");
 		String word = sc.nextLine();
 		long startTime = System.nanoTime();
+		
 		FileInputStream fin = new FileInputStream(fileName);
-		LineNumberReader reader = new LineNumberReader(
-				new InputStreamReader(fin));
 		
 		String line = null;
-		Map<Integer, List<Integer>> enters = new HashMap<>();
-		while((line = reader.readLine()) != null) {
-			int number = reader.getLineNumber();
-			List<Integer> finds = find(line, word);
-			if(finds.size() != 0)
-				enters.put(number, finds);
+		int size = fin.available();
+		int threadSize = size / 4;
+		
+		List<SearchWorker2> workers = new ArrayList<>();
+		for(int i = 0; i < 4; i++) {
+			byte[] text = new byte[threadSize];
+			fin.read(text);
+			SearchWorker2 worker = new SearchWorker2(text, word);
+			workers.add(worker);
+			new Thread(worker).start();
 		}
 		
 		System.out.println("Duration: " + (System.nanoTime() - startTime));
