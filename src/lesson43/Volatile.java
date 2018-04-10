@@ -23,6 +23,7 @@ public class Volatile {
                     local_value = MY_INT;
                 }
             }
+            LOGGER.info("Listener stoped");
         }
     }
 
@@ -40,6 +41,7 @@ public class Volatile {
                     e.printStackTrace();
                 }
             }
+            LOGGER.info("Changer stoped, MY_INT: " + MY_INT);
         }
     }
 }
