@@ -14,7 +14,9 @@ public class Work02 {
 				while(true) {
 					synchronized (this) {
 						if(message == null) {
+							System.out.println("Waiting...");
 							this.wait();
+							System.out.println("Complete waiting");
 						}
 						System.out.println("I have a message! " + message);
 						message = null;
@@ -28,9 +30,10 @@ public class Work02 {
 		
 		public synchronized void publish(String message) {
 			this.message = message;
+			System.out.println("Notify about message");
 			this.notify();
+			System.out.println("Leave method");
 		}
-		
 	}
 
 	public static void main(String[] args) {
