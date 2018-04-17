@@ -3,13 +3,16 @@ package lesson43.homework;
 import java.util.Deque;
 import java.util.Random;
 
-public class Doctor implements Runnable {
+public class Doctor extends Thread {
 	
 	private int number; 
 	private int visitTimeout;
 	private Deque<Patient> queue;
 	private int duration;
 	private int count = 0;
+	private long startTime;
+	
+	private static long counter;
 	
 	public Doctor(Deque<Patient> queue, int visitTimeout, int number) {
 		this.visitTimeout = visitTimeout;
@@ -22,8 +25,8 @@ public class Doctor implements Runnable {
 
 	@Override
 	public void run() {
-		long startTime = System.currentTimeMillis();
-		while(System.currentTimeMillis() - startTime < duration) {
+		startTime = System.currentTimeMillis();
+		while(opened()) {
 			Patient patient = null;
 			synchronized (queue) {
 				try {
@@ -58,5 +61,9 @@ public class Doctor implements Runnable {
 		System.err.println(
 				String.format("Доктор %s принял %s пациентов",
 						number, count));
+	}
+	
+	public synchronized boolean opened() {
+		return this.isAlive() && System.currentTimeMillis() - startTime < duration;
 	}
 }

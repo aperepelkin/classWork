@@ -12,16 +12,16 @@ public class App {
 		
 		Scanner sc = new Scanner(System.in);
 		int n = sc.nextInt();
-		List<Thread> doctors = new ArrayList<>();
+		List<Doctor> doctors = new ArrayList<>();
 		Deque<Patient> queue = new LinkedList<>();
 		for(int i = 0; i < n; i++) {
-			Thread doctor = new Thread(new Doctor(queue, n+1, i+1));
+			Doctor doctor = new Doctor(queue, n+1, i+1);
 			doctors.add(doctor);
 			doctor.start();
 		}
 		
 		int number = 0;
-		while(doctors.stream().anyMatch(thread -> thread.isAlive())) {
+		while(doctors.stream().filter(doctor -> doctor.opened()).count() > 0) {
 			synchronized (queue) {
 				queue.push(new Patient(++number));
 				queue.notifyAll();
