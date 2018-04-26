@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import com.google.common.base.Joiner;
+
+
 
 public class App {
 
@@ -39,7 +42,7 @@ public class App {
 			}
 			Thread.sleep(50);
 		}
-		System.out.println("Всего поступило пациентов: " + number);
+		System.out.println(Joiner.on(" ").join("всего поступило пациентов:", number));
 		System.out.println(queue.isEmpty()? "Все пациенты приняты.":"Кол-во непринятых пациентов: "+ queue.size());
 	}
 }
